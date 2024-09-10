@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="movie_titles">
+        <item>Interstellar</item>
+        <item>It Ends with Us</item>
+        <item>Alien Resurrection</item>
+        <item>Inception</item>
+        <item>The Lord of the Rings</item>
+        <item>Dune</item>
+    </array>
+
+    <array name="movie_descriptions">
+        <item>A sci-fi epic about space exploration.</item>
+        <item>A romantic drama based on a bestselling novel.</item>
+        <item>A classic sci-fi horror film.</item>
+        <item>A mind-bending thriller by Christopher Nolan.</item>
+        <item>An epic fantasy adventure.</item>
+        <item>A science fiction film based on a novel by Frank Herbert.</item>
+    </array>
+
+    <array name="movie_images">
+        <item>@drawable/movie_image1</item>
+        <item>@drawable/movie_image1</item>
+        <item>@drawable/movie_image1</item>
+        <item>@drawable/movie_image1</item>
+        <item>@drawable/movie_image1</item>
+        <item>@drawable/movie_image1</item>
+    </array>
+</resources>

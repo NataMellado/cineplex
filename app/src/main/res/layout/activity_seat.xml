@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SeatActivity"
+    android:background="@color/backgroundColor">
+
+    <!--ScrollView para hacer el contenido desplazable -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Imagen principal -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="230dp">
+                <ImageView
+                    android:id="@+id/movie_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/movie_image1"
+                    android:scaleType="centerCrop"
+                    android:paddingTop="340dp"
+                    android:contentDescription="@string/movie">
+                </ImageView>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Interestelar"
+                style="@style/header_style"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="23dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Selecciona asientos"
+                    style="@style/h2_style"
+                    android:paddingHorizontal="10dp">
+                </TextView>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="98dp"
+                    android:src="@drawable/screen"
+/>
+
+                <!-- Grid de asientos -->
+                <include layout="@layout/grid_seat_selection"/>
+
+                <!-- Continue Button -->
+                <include layout="@layout/button_continue"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <include layout ="@layout/bottom_navigation"/>
+
+</RelativeLayout>

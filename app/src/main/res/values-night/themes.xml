@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Cineplex" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!-- Color principal de la UI -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+
+        <!-- Personalización del fondo y texto -->
+        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="android:textColor">@color/textColor</item>
+        <!-- <item name="android:fontFamily">@font/my_custom_font</item>-->
+
+        <!-- Estilos de botones -->
+        <!--<item name="buttonStyle">@style/AppTheme.Button</item>--> -->
+    </style>
+</resources>

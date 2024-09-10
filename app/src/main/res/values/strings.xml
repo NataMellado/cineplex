@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">cineplex</string>
+    <string name="featured_movie">Película destacada</string>
+    <string name="header">Cartelera</string>
+    <string name="movie">Movie</string>
+    <string name="titulo">Título</string>
+
+    <string-array name="header_spinner_data">
+        <item>Todos los cines</item>
+        <item>Maipú</item>
+        <item>Ñuñoa</item>
+        <item>Providencia</item>
+    </string-array>
+
+    <string-array name="cinema_spinner_data">
+        <item>Maipú</item>
+        <item>Ñuñoa</item>
+        <item>Providencia</item>
+    </string-array>
+
+    <string name="description_movie1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vehicula, sem et posuere hendrerit, erat justo dictum elit, sit amet imperdiet nisi augue ut arcu. Curabitur pharetra orci a nisl tincidunt, a consequat nunc efficitur. Sed non velit non risus dictum tempor. Donec auctor libero euismod orci.
+
+</string>
+
+</resources>

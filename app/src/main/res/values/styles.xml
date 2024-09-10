@@ -1,0 +1,40 @@
+<resources>
+    // Header Style
+    <style name="header_style">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    // H2 Style
+    <style name="h2_style">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    // Button
+    <style name="button_style">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    // Description style
+    <style name="description_style">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    // Description2 style
+    <style name="description2_style">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ConfirmationActivity"
+    android:background="@color/backgroundColor">
+
+    <!--ScrollView para hacer el contenido desplazable -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Imagen principal -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="230dp">
+                <ImageView
+                    android:id="@+id/movie_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/movie_image1"
+                    android:scaleType="centerCrop"
+                    android:paddingTop="340dp"
+                    android:contentDescription="@string/movie">
+                </ImageView>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Título -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Confirmación de compra"
+                style="@style/header_style"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="23dp"/>
+
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Título"
+                style="@style/h2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/cinema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cine"
+                style="@style/description2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sala: 10"
+                style="@style/description2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Día"
+                style="@style/description2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hora"
+                style="@style/description2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/seats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Asientos"
+                style="@style/description2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
+
+
+
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <include layout ="@layout/bottom_navigation"/>
+
+</RelativeLayout>
