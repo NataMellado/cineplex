@@ -92,12 +92,12 @@ public class MovieActivity extends AppCompatActivity {
                 // Obtener el ID del RadioButton seleccionado en RadioGroupDate
                 int selectedDateId = radioGroupDate.getCheckedRadioButtonId();
                 RadioButton selectedDateButton = findViewById(selectedDateId);
-                String selectedDate = selectedDateButton.getText().toString();
+                String selectedDate = selectedDateButton != null ? selectedDateButton.getText().toString() : "";
 
                 // Obtener el ID del RadioButton seleccionado en RadioGroupTime
                 int selectedScheduleId = radioGroupTime.getCheckedRadioButtonId();
                 RadioButton selectedScheduleButton = findViewById(selectedScheduleId);
-                String selectedSchedule = selectedScheduleButton.getText().toString();
+                String selectedSchedule = selectedScheduleButton != null ? selectedScheduleButton.getText().toString() : "";
 
                 // Verificar que la fecha y hora no estén vacías
                 if (selectedDate.isEmpty()) {
