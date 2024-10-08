@@ -31,6 +31,22 @@
         android:layout_margin="8dp"
         android:layout_columnWeight="1"
         app:cardCornerRadius="8dp"
+        android:tag="movie_image2">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/movie_image2"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewMovie3"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_columnSpan="1"
+        android:layout_margin="8dp"
+        android:layout_columnWeight="1"
+        app:cardCornerRadius="8dp"
         android:tag="movie_image3">
         <ImageView
             android:layout_width="match_parent"
@@ -40,7 +56,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewMovie3"
+        android:id="@+id/cardViewMovie4"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_columnSpan="1"
@@ -56,7 +72,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewMovie4"
+        android:id="@+id/cardViewMovie5"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_columnSpan="1"
@@ -72,22 +88,6 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewMovie5"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_columnSpan="1"
-        android:layout_margin="8dp"
-        android:layout_columnWeight="1"
-        app:cardCornerRadius="8dp"
-        android:tag="movie_image5">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/movie_image2"
-            android:scaleType="centerCrop"/>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
         android:id="@+id/cardViewMovie6"
         android:layout_width="0dp"
         android:layout_height="150dp"
@@ -95,7 +95,7 @@
         android:layout_margin="8dp"
         android:layout_columnWeight="1"
         app:cardCornerRadius="8dp"
-        android:tag="movie_image5">
+        android:tag="movie_image6">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

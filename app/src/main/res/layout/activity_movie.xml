@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MovieActivity"
+    tools:context=".activities.MovieActivity"
     android:background="@color/backgroundColor">
 
     <!--ScrollView para hacer el contenido desplazable -->
@@ -48,6 +48,7 @@
 
             <!-- Descripción -->
             <TextView
+                android:id="@+id/movie_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/description_movie1"

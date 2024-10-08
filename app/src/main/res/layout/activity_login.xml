@@ -4,20 +4,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".activities.LoginActivity"
     android:orientation="vertical"
-    android:background="@color/backgroundColor">
-
-    <!-- Header -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="150dp"
-        android:text="Login"
-        style="@style/header_style"
-        android:layout_marginHorizontal="8dp">
-    </TextView>
+    android:background="@color/backgroundColor"
+    android:gravity="center_vertical">
 
     <ImageView
         android:layout_width="174dp"
@@ -36,6 +26,7 @@
         android:textColorHint="@color/white"
         android:hint="Usuario"
        />
+
     <EditText
         android:id="@+id/password"
         android:layout_width="276dp"
@@ -56,5 +47,39 @@
         style="@style/button_style"
         android:background="@drawable/button"
         android:layout_marginTop="30dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="30dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="¿No tienes una cuenta? "
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:paddingLeft="13dp"
+        android:paddingVertical="13dp"/>
+
+    <TextView
+        android:id="@+id/registerPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Regístrate aquí"
+        android:textColor="@color/accentColor"
+        android:textSize="16sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingRight="13dp"
+        android:paddingVertical="13dp"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

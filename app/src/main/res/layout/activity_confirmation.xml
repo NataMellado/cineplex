@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ConfirmationActivity"
+    tools:context=".activities.ConfirmationActivity"
     android:background="@color/backgroundColor">
 
     <!--ScrollView para hacer el contenido desplazable -->
@@ -96,13 +96,14 @@
                 android:paddingHorizontal="23dp">
             </TextView>
 
-
-
-
-
-
-
-
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Valor"
+                style="@style/description2_style"
+                android:paddingHorizontal="23dp">
+            </TextView>
 
         </LinearLayout>
     </ScrollView>

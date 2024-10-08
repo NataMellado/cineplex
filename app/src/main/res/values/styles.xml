@@ -18,7 +18,7 @@
 
     // Button
     <style name="button_style">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">19sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -32,7 +32,7 @@
 
     // Description2 style
     <style name="description2_style">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">19sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:paddingBottom">16dp</item>
     </style>

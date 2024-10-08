@@ -17,5 +17,4 @@
         android:background="@drawable/button_nav_button">
     </Button>
 
-
 </LinearLayout>
