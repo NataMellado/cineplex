@@ -83,9 +83,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         boolean exists = (cursor.getCount() > 0);  // Si el cursor tiene filas, el usuario existe
         if(exists) {
             cursor.moveToFirst();
+            // Crear un objeto User con los datos del usuario
             User user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2));
+            // Establecer el usuario actual en la clase User (Singleton)
             User.setCurrentUser(user);
-
         }
 
         cursor.close();
@@ -93,17 +94,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    // Metodo para obtener un usuario por su nombre de usuario
-    public User getUserByUsername(String username) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM users WHERE username = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{username});
-        cursor.moveToFirst();
-        User user = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-        cursor.close();
-        db.close();
-        return user;
-    }
 
     // Metodo para añadir un usuario
     public long addUser(String username, String rut, String password) {
