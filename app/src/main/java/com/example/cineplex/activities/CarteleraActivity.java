@@ -38,10 +38,6 @@ public class CarteleraActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Obtener el usuario de la actividad anterior
-        Intent intent = getIntent();
-        User user = intent.getParcelableExtra("USER");
-
         // Crear una lista de objetos Movie
         List<Movie> movies = new ArrayList<>();
         movies.add(new Movie(R.drawable.movie_image1, "Interestelar", "En un futuro cercano, la humanidad enfrenta la extinción debido a la falta de recursos. Un grupo de exploradores viaja a través de un agujero de gusano cerca de Saturno para encontrar un nuevo hogar para la humanidad. Esta emocionante odisea espacial combina conceptos científicos con una profunda exploración de la relación padre-hijo." ));
@@ -61,22 +57,24 @@ public class CarteleraActivity extends AppCompatActivity {
                 R.id.cardViewMovie6
         };
 
+        // imprimir en consola la id del currentUser
+        System.out.println("User id desde cartelera: " + User.getCurrentUser().getUserId());
+
         // Configurar los listeners para cada CardView
         for (int i = 0; i < movies.size(); i++) {
+
             // Método para configurar el listener de clic para cada CardView
             CardView cardView = findViewById(cardViewIds[i]);
             int finalI = i;
             cardView.setOnClickListener(view -> {
+
                 Intent intent2 = new Intent(CarteleraActivity.this, MovieActivity.class);
                 intent2.putExtra("MOVIE", movies.get(finalI));
-                intent2.putExtra("USER", user);
-                System.out.println("ID del usuario desde movies :" + user.getUserId());
-
                 startActivity(intent2);
+
             });
         }
 
     }
 
-    // restablecer datos onResume
 }

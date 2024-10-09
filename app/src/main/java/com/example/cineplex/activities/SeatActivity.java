@@ -39,9 +39,8 @@ public class SeatActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Obtener el usuario de la actividad anterior
-        Intent intent2 = getIntent();
-        User user = intent2.getParcelableExtra("USER");
+        // imprimir en consola la id del currentUser
+        System.out.println("User id desde seat: " + User.getCurrentUser().getUserId());
 
         // Recibir el objeto ticket desde la actividad anterior
         Intent intent = getIntent();
@@ -89,11 +88,6 @@ public class SeatActivity extends AppCompatActivity {
                 // Establecer los asientos seleccionados en el objeto Ticket y calcular el valor
                 ticket.setAsientos(selectedSeats.toString());
                 ticket.calcularValor(selectedSeatsCount);
-                // Establecer el id del usuario en el objeto Ticket
-                ticket.setUserId(user.getUserId());
-                System.out.println("ID del usuario desde SeatActivity: " + user.getUserId());
-
-
 
                 // Añadir el ticket a la base de datos
                 DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
@@ -117,7 +111,6 @@ public class SeatActivity extends AppCompatActivity {
         Button carteleraButton = findViewById(R.id.button_cartelera);
         carteleraButton.setOnClickListener(view -> {
             Intent i = new Intent(SeatActivity.this, CarteleraActivity.class);
-            i.putExtra("USER", user);
             startActivity(i);
         });
     }

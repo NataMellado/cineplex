@@ -68,17 +68,16 @@ public class LoginActivity extends AppCompatActivity {
                 if (dbHelper.verifyCredentials(username, password)) {
 
                     Intent I = new Intent(LoginActivity.this, CarteleraActivity.class);
-                    // obtener el usuario de la base de datos y pasarlo a la siguiente actividad
-                    User userLogueado = dbHelper.getUserByUsername(username);
-                    I.putExtra("USER", userLogueado);
+                    // imprimir en consola la id del currentUser
+                    System.out.println("User id desde login: " + User.getCurrentUser().getUserId());
                     startActivity(I);
-                    // imprimir el id del usuario logueado
-                    System.out.println("ID del usuario logueado: " + userLogueado.getUserId());
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
 
         // Configuración del enlace de registro
         TextView registerPrompt = findViewById(R.id.registerPrompt);

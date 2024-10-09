@@ -8,6 +8,9 @@ public class User implements Parcelable {
     private String username;
     private String rut;
 
+    // Variable estática para almacenar el usuario actual
+    private static User currentUser;
+
     // Constructor
     public User(long userId, String username, String rut) {
         this.userId = userId;
@@ -15,6 +18,7 @@ public class User implements Parcelable {
         this.rut = rut;
     }
 
+    // Getters
     public long getUserId() {
         return userId;
     }
@@ -27,6 +31,7 @@ public class User implements Parcelable {
         return rut;
     }
 
+    // Setters
     public void setUserId(long userId) {
         this.userId = userId;
     }
@@ -38,6 +43,17 @@ public class User implements Parcelable {
     public void setRut(String rut) {
         this.rut = rut;
     }
+
+    // M{etodo para establecer el usuario actual
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    // M{etodo para obtener el usuario actual
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
 
     @Override
     public int describeContents() {

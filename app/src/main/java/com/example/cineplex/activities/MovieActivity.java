@@ -46,10 +46,6 @@ public class MovieActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Obtener el usuario de la actividad anterior
-        Intent intent2 = getIntent();
-        User user = intent2.getParcelableExtra("USER");
-
         //Obtener el objeto Movie desde el Intent
         Intent intent = getIntent();
         Movie movie = intent.getParcelableExtra("MOVIE");
@@ -59,14 +55,12 @@ public class MovieActivity extends AppCompatActivity {
         TextView movieTitle = findViewById(R.id.movie_title);
         TextView movieDescription = findViewById(R.id.movie_description);
 
-
-        // Establecer los valores
+        // Establecer los valores de imagen, título y descripción
         if(movie != null) {
             movieImage.setImageResource(movie.getImageResId());
             movieTitle.setText(movie.getTitle());
             movieDescription.setText(movie.getDescription());
         }
-
 
         // Almacena en las variables su referencia por ID
         radioGroupDate = findViewById(R.id.radioGroupDate);
@@ -78,6 +72,9 @@ public class MovieActivity extends AppCompatActivity {
                 R.array.cinema_spinner_data, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        // imprimir en consola la id del currentUser
+        System.out.println("User id desde movie: " + User.getCurrentUser().getUserId());
 
         // Configuración del botón Continuar
         Button continueButton;
@@ -102,13 +99,15 @@ public class MovieActivity extends AppCompatActivity {
             } else if (selectedSchedule.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Debes seleccionar una hora", Toast.LENGTH_SHORT).show();
             } else {
+                // obtener la id de currentUser
+                long userId = User.getCurrentUser().getUserId();
+
                 // Crear el objeto Ticket
-                Ticket ticket = new Ticket(movie, selectedCine, "10", selectedDate, selectedSchedule, "", 0, user.getUserId());
+                Ticket ticket = new Ticket(movie, selectedCine, "10", selectedDate, selectedSchedule, "", 0, userId);
 
                 // Pasar el objeto Ticket a la nueva Activity de asientos
                 Intent intent1 = new Intent(MovieActivity.this, SeatActivity.class);
                 intent1.putExtra("TICKET", ticket);
-                intent1.putExtra("USER", user);
 
                 // Iniciar la nueva Activity
                 startActivity(intent1);

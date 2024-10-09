@@ -13,7 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Nombre y versión de la base de datos
     private static final String DATABASE_NAME = "cineplex.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Instancia única de DatabaseHelper
     private static DatabaseHelper instance;
@@ -77,11 +77,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Método para verificar las credenciales del usuario
     public boolean verifyCredentials(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         Cursor cursor = db.rawQuery(query, new String[]{username, password});
 
         boolean exists = (cursor.getCount() > 0);  // Si el cursor tiene filas, el usuario existe
+        if(exists) {
+            cursor.moveToFirst();
+            User user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2));
+            User.setCurrentUser(user);
+
+        }
+
         cursor.close();
         db.close();
         return exists;

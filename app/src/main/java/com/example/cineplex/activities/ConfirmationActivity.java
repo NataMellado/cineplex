@@ -41,6 +41,9 @@ public class ConfirmationActivity extends AppCompatActivity {
             return insets;
         });
 
+        // imprimir en consola la id del currentUser
+        System.out.println("User id desde confirmation: " + User.getCurrentUser().getUserId());
+
         // Obtener datos del intent
         Intent intent = getIntent();
         Ticket ticket = intent.getParcelableExtra("TICKET");
@@ -77,7 +80,6 @@ public class ConfirmationActivity extends AppCompatActivity {
             // pasar el usuario a la siguiente actividad
             i.putExtra("USER", user);
             startActivity(i);
-            finish();
         });
 
     }
