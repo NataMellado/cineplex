@@ -77,8 +77,13 @@ public class ConfirmationActivity extends AppCompatActivity {
         Button carteleraButton = findViewById(R.id.button_cartelera);
         carteleraButton.setOnClickListener(view -> {
             Intent i = new Intent(ConfirmationActivity.this, CarteleraActivity.class);
-            // pasar el usuario a la siguiente actividad
-            i.putExtra("USER", user);
+            startActivity(i);
+        });
+
+        // Configuración del botón Profile
+        Button profileButton = findViewById(R.id.button_profile);
+        profileButton.setOnClickListener(view -> {
+            Intent i = new Intent(ConfirmationActivity.this, ProfileActivity.class);
             startActivity(i);
         });
 

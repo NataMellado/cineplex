@@ -18,9 +18,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cineplex.R;
 import com.example.cineplex.database.DatabaseHelper;
 import com.example.cineplex.models.Ticket;
-import com.example.cineplex.models.User;
 
 public class SeatActivity extends AppCompatActivity {
+
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class SeatActivity extends AppCompatActivity {
             return insets;
         });
 
-        // imprimir en consola la id del currentUser
-        System.out.println("User id desde seat: " + User.getCurrentUser().getUserId());
+        // Obtener instancia de DatabaseHelper
+        databaseHelper = DatabaseHelper.getInstance(this);
 
         // Recibir el objeto ticket desde la actividad anterior
         Intent intent = getIntent();
@@ -51,11 +52,11 @@ public class SeatActivity extends AppCompatActivity {
         ImageView movieImage = findViewById(R.id.movie_image);
         TextView movieTitleView = findViewById(R.id.movie_title);
 
+        // Establecer los valores de imagen y título
         if (ticket != null) {
             movieImage.setImageResource(ticket.getPelicula().getImageResId());
             movieTitleView.setText(ticket.getPelicula().getTitle());
         }
-
 
         // Obtener referencia a los CheckBox
         int[] checkBoxIds = {
@@ -70,6 +71,7 @@ public class SeatActivity extends AppCompatActivity {
         Button continueButton;
         continueButton = findViewById(R.id.button_continuar);
         continueButton.setOnClickListener(view -> {
+
             StringBuilder selectedSeats = new StringBuilder();
             int selectedSeatsCount = 0;
 
@@ -83,15 +85,15 @@ public class SeatActivity extends AppCompatActivity {
             }
 
             if (selectedSeats.toString().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Debes eleccionar al menos un asiento.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Debes seleccionar al menos un asiento.", Toast.LENGTH_SHORT).show();
             } else {
+
                 // Establecer los asientos seleccionados en el objeto Ticket y calcular el valor
                 ticket.setAsientos(selectedSeats.toString());
                 ticket.calcularValor(selectedSeatsCount);
 
                 // Añadir el ticket a la base de datos
-                DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
-                boolean isAdded= dbHelper.addTicket(ticket);
+                boolean isAdded= databaseHelper.addTicket(ticket);
 
                 if (isAdded) {
                     Toast.makeText(getApplicationContext(),  "Ticket comprado con éxito", Toast.LENGTH_SHORT).show();
@@ -113,5 +115,13 @@ public class SeatActivity extends AppCompatActivity {
             Intent i = new Intent(SeatActivity.this, CarteleraActivity.class);
             startActivity(i);
         });
+
+        // Configuración del botón Profile
+        Button profileButton = findViewById(R.id.button_profile);
+        profileButton.setOnClickListener(view -> {
+            Intent i = new Intent(SeatActivity.this, ProfileActivity.class);
+            startActivity(i);
+        });
+
     }
 }

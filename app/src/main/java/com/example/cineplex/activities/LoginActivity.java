@@ -14,8 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.cineplex.database.DatabaseHelper;
 import com.example.cineplex.R;
+import com.example.cineplex.database.DatabaseHelper;
 import com.example.cineplex.models.User;
 
 public class LoginActivity extends AppCompatActivity {

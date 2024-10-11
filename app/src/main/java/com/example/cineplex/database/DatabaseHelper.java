@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.cineplex.R;
+import com.example.cineplex.models.Movie;
 import com.example.cineplex.models.Ticket;
 import com.example.cineplex.models.User;
 
@@ -13,12 +15,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Nombre y versión de la base de datos
     private static final String DATABASE_NAME = "cineplex.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 14;
 
-    // Instancia única de DatabaseHelper
+    // Instancia estática única de la clase DatabaseHelper
     private static DatabaseHelper instance;
 
-    // Constructor privado para evitar la creación directa de instancias
+    // Constructor privado para evitar instanciación externa
     private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -35,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Método que se ejecuta cuando se crea la base de datos por primera vez
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         // Tabla users
         String CREATE_USERS_TABLE = "CREATE TABLE users ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -55,13 +58,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "user_id INTEGER," +
                 "FOREIGN KEY(user_id) REFERENCES users(id))";
 
+        // Tabla movies
+        String CREATE_MOVIES_TABLE = "CREATE TABLE movies (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "image_path INTEGER,"+
+                "title TEXT, " +
+                "description TEXT)";
+
+
         // Crear tablas
         db.execSQL(CREATE_USERS_TABLE);
         db.execSQL(CREATE_TICKET_TABLE);
+        db.execSQL(CREATE_MOVIES_TABLE);
 
 
         // Insertar usuario semilla
         db.execSQL("INSERT INTO users (id, username, rut, password) VALUES (1, 'admin', '8-2', '1234');");
+
+        // Insertar películas
+        db.execSQL("INSERT INTO movies (id, image_path, title, description) VALUES (1, " + R.drawable.movie_image1 + ", 'Interestelar', 'En un futuro cercano, la humanidad enfrenta la extinción debido a la falta de recursos. Un grupo de exploradores viaja a través de un agujero de gusano cerca de Saturno para encontrar un nuevo hogar para la humanidad. Esta emocionante odisea espacial combina conceptos científicos con una profunda exploración de la relación padre-hijo.');");
+        db.execSQL("INSERT INTO movies (id, image_path, title, description) VALUES (2, " + R.drawable.movie_image2 + ", 'Alien Romulus', 'En esta entrega de la famosa saga Alien, un grupo de colonos en un planeta lejano se enfrenta a un aterrador nuevo enemigo. La tensión aumenta mientras los personajes luchan por sobrevivir en un entorno hostil, mientras una misteriosa fuerza alienígena acecha en la oscuridad. Una mezcla perfecta de terror y ciencia ficción.');");
+        db.execSQL("INSERT INTO movies (id, image_path, title, description) VALUES (3, " + R.drawable.movie_image3 + ", 'Inception', 'Dom Cobb es un ladrón experto en el arte de la extracción, que roba secretos de los sueños de las personas. Cuando se le ofrece la oportunidad de borrar su pasado criminal a cambio de un trabajo único: la ''incepción'', el acto de implantar una idea en la mente de alguien. A medida que la línea entre la realidad y el sueño se difumina, se desarrolla una intensa batalla por la mente.');");
+        db.execSQL("INSERT INTO movies (id, image_path, title, description) VALUES (4, " + R.drawable.movie_image4 + ", 'El señor de los anillos', 'Basada en la famosa obra de J.R.R. Tolkien, esta épica trilogía sigue la aventura de Frodo Bolsón, quien se embarca en un peligroso viaje para destruir un anillo poderoso. Con la ayuda de un grupo diverso de compañeros, se enfrenta a fuerzas oscuras en un mundo de fantasía lleno de magia, amistad y sacrificio.');");
+        db.execSQL("INSERT INTO movies (id, image_path, title, description) VALUES (5, " + R.drawable.movie_image5 + ", 'It Ends With Us', 'Una conmovedora historia de amor y autodescubrimiento, donde Lily Bloom, una joven emprendedora, se enfrenta a las complejidades de una relación apasionada. Mientras lucha por construir su vida en Boston, debe enfrentar su oscuro pasado y tomar decisiones difíciles que cambiarán su vida para siempre.');");
+        db.execSQL("INSERT INTO movies (id, image_path, title, description) VALUES (6, " + R.drawable.movie_image6 + ", 'Dune II', 'La continuación del aclamado Dune, esta película sigue la lucha de Paul Atreides mientras busca venganza contra aquellos que destruyeron a su familia. Con impresionantes paisajes de ciencia ficción y una profunda exploración de temas como el poder y la supervivencia, Dune II ofrece una experiencia cinematográfica inolvidable.');");
     }
 
     // Método que se ejecuta cuando se actualiza la base de datos
@@ -70,6 +90,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Si la base de datos ya existe y ha cambiado de versión, eliminar las tablas
         db.execSQL("DROP TABLE IF EXISTS users");
         db.execSQL("DROP TABLE IF EXISTS tickets");
+        db.execSQL("DROP TABLE IF EXISTS movies");
+
         // Crear nuevamente la base de datos
         onCreate(db);
     }
@@ -151,7 +173,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return result != -1; // Retornar true si la inserción fue exitosa o false en caso contrario
+    }
 
+    // Método para obtener película por id
+    public Movie getMovieById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Movie movie = null;
+
+        String query = "SELECT * FROM movies WHERE id = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
+
+        if (cursor.moveToFirst()) {
+            movie = new Movie(cursor.getInt(1), cursor.getString(2), cursor.getString(3));
+        }
+
+        cursor.close();
+        db.close();
+
+        return movie;
+    }
+
+    // Método para obtener tickets de un usuario
+    public Cursor getTicketsByUserId(long userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM tickets WHERE user_id = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
     }
 
 }

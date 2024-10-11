@@ -2,6 +2,7 @@ package com.example.cineplex.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,14 +13,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cineplex.R;
+import com.example.cineplex.database.DatabaseHelper;
 import com.example.cineplex.models.Movie;
-import com.example.cineplex.models.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CarteleraActivity extends AppCompatActivity {
+
+    // Declarar una variable DatabaseHelper
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +39,8 @@ public class CarteleraActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Crear una lista de objetos Movie
-        List<Movie> movies = new ArrayList<>();
-        movies.add(new Movie(R.drawable.movie_image1, "Interestelar", "En un futuro cercano, la humanidad enfrenta la extinción debido a la falta de recursos. Un grupo de exploradores viaja a través de un agujero de gusano cerca de Saturno para encontrar un nuevo hogar para la humanidad. Esta emocionante odisea espacial combina conceptos científicos con una profunda exploración de la relación padre-hijo." ));
-        movies.add(new Movie(R.drawable.movie_image2, "Alien Romulus", "En esta entrega de la famosa saga 'Alien', un grupo de colonos en un planeta lejano se enfrenta a un aterrador nuevo enemigo. La tensión aumenta mientras los personajes luchan por sobrevivir en un entorno hostil, mientras una misteriosa fuerza alienígena acecha en la oscuridad. Una mezcla perfecta de terror y ciencia ficción." ));
-        movies.add(new Movie(R.drawable.movie_image3, "Inception", "Dom Cobb es un ladrón experto en el arte de la extracción, que roba secretos de los sueños de las personas. Cuando se le ofrece la oportunidad de borrar su pasado criminal a cambio de un trabajo único: la 'incepción', el acto de implantar una idea en la mente de alguien. A medida que la línea entre la realidad y el sueño se difumina, se desarrolla una intensa batalla por la mente." ));
-        movies.add(new Movie(R.drawable.movie_image4, "El señor de los anillos", "Basada en la famosa obra de J.R.R. Tolkien, esta épica trilogía sigue la aventura de Frodo Bolsón, quien se embarca en un peligroso viaje para destruir un anillo poderoso. Con la ayuda de un grupo diverso de compañeros, se enfrenta a fuerzas oscuras en un mundo de fantasía lleno de magia, amistad y sacrificio." ));
-        movies.add(new Movie(R.drawable.movie_image5, "It Ends With Us", "Una conmovedora historia de amor y autodescubrimiento, donde Lily Bloom, una joven emprendedora, se enfrenta a las complejidades de una relación apasionada. Mientras lucha por construir su vida en Boston, debe enfrentar su oscuro pasado y tomar decisiones difíciles que cambiarán su vida para siempre." ));
-        movies.add(new Movie(R.drawable.movie_image6, "Dune II", "La continuación del aclamado 'Dune', esta película sigue la lucha de Paul Atreides mientras busca venganza contra aquellos que destruyeron a su familia. Con impresionantes paisajes de ciencia ficción y una profunda exploración de temas como el poder y la supervivencia, 'Dune II' ofrece una experiencia cinematográfica inolvidable." ));
+        // Obtener una instancia de DatabaseHelper
+        databaseHelper = DatabaseHelper.getInstance(this);
 
         // Crear un arreglo de IDs de CardView
         int[] cardViewIds = {
@@ -57,23 +52,35 @@ public class CarteleraActivity extends AppCompatActivity {
                 R.id.cardViewMovie6
         };
 
-        // imprimir en consola la id del currentUser
-        System.out.println("User id desde cartelera: " + User.getCurrentUser().getUserId());
 
         // Configurar los listeners para cada CardView
-        for (int i = 0; i < movies.size(); i++) {
-
-            // Método para configurar el listener de clic para cada CardView
+        for (int i = 0; i < cardViewIds.length; i++) {
             CardView cardView = findViewById(cardViewIds[i]);
-            int finalI = i;
+            int movieId = i + 1;
+
             cardView.setOnClickListener(view -> {
+                Movie selectedMovie = databaseHelper.getMovieById(movieId);
 
-                Intent intent2 = new Intent(CarteleraActivity.this, MovieActivity.class);
-                intent2.putExtra("MOVIE", movies.get(finalI));
-                startActivity(intent2);
-
+                Intent intent = new Intent(CarteleraActivity.this, MovieActivity.class);
+                intent.putExtra("movie", selectedMovie);
+                startActivity(intent);
             });
+
         }
+
+        // Configuración del botón Profile
+        Button profileButton = findViewById(R.id.button_profile);
+        profileButton.setOnClickListener(view -> {
+            Intent i = new Intent(CarteleraActivity.this, ProfileActivity.class);
+            startActivity(i);
+        });
+
+        // Configuración del botón Cartelera
+        Button carteleraButton = findViewById(R.id.button_cartelera);
+        carteleraButton.setOnClickListener(view -> {
+            Intent i = new Intent(CarteleraActivity.this, CarteleraActivity.class);
+            startActivity(i);
+        });
 
     }
 

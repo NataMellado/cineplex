@@ -95,6 +95,7 @@ public class Ticket implements Parcelable {
         this.valor = cantidad * 5990;
     }
 
+
     // Implementación de Parcelable
     @Override
     public int describeContents() {

@@ -48,7 +48,7 @@ public class MovieActivity extends AppCompatActivity {
 
         //Obtener el objeto Movie desde el Intent
         Intent intent = getIntent();
-        Movie movie = intent.getParcelableExtra("MOVIE");
+        Movie movie = intent.getParcelableExtra("movie");
 
         // Obtener referencia a imagen, título y descripción
         ImageView movieImage = findViewById(R.id.movie_image);
@@ -120,6 +120,14 @@ public class MovieActivity extends AppCompatActivity {
             Intent i = new Intent(MovieActivity.this, CarteleraActivity.class);
             startActivity(i);
         });
+
+        // Configuración del botón Profile
+        Button profileButton = findViewById(R.id.button_profile);
+        profileButton.setOnClickListener(view -> {
+            Intent i = new Intent(MovieActivity.this, ProfileActivity.class);
+            startActivity(i);
+        });
+
 
 
     }

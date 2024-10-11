@@ -8,6 +8,7 @@
     tools:context=".activities.SeatActivity"
     android:background="@color/backgroundColor">
 
+
     <!--ScrollView para hacer el contenido desplazable -->
     <ScrollView
         android:layout_width="match_parent"
