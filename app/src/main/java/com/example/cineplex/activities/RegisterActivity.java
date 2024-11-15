@@ -14,15 +14,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.cineplex.database.DatabaseHelper;
 import com.example.cineplex.R;
-import com.example.cineplex.models.User;
+import com.example.cineplex.helpers.FirebaseDataHelper;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
     EditText txtUsername, txtRut, txtPassword, txtConfirmPassword;
     Button btnRegister;
-    User user;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Inicializar Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
+
         // Referencias a los elementos
         txtUsername = findViewById(R.id.username);
         txtRut = findViewById(R.id.rut);
@@ -48,43 +52,54 @@ public class RegisterActivity extends AppCompatActivity {
         txtConfirmPassword = findViewById(R.id.confirmPassword);
         btnRegister = findViewById(R.id.register);
 
+
         // Configuración del botón de registro
         btnRegister.setOnClickListener(view -> {
-            String username = txtUsername.getText().toString();
+            String email = txtUsername.getText().toString();
             String rut = txtRut.getText().toString();
             String password = txtPassword.getText().toString();
             String confirmPassword = txtConfirmPassword.getText().toString();
 
             // Validaciones
-            if (username.isEmpty() || rut.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (email.isEmpty() || rut.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Debes ingresar todos los datos", Toast.LENGTH_SHORT).show();
-            } else {
-                // Obtener la instancia de DatabaseHelper
-                DatabaseHelper dbHelper = DatabaseHelper.getInstance(getApplicationContext());
-
-                // Verificar si el rut o el nombre de usuario ya existen
-                if (dbHelper.usernameExists(username)) {
-                    Toast.makeText(getApplicationContext(), "El nombre de usuario ya está registrado", Toast.LENGTH_SHORT).show();
-                } else if (dbHelper.rutExists(rut)) {
-                    Toast.makeText(getApplicationContext(), "El RUT ya está registrado", Toast.LENGTH_SHORT).show();
-                } else if (!password.equals(confirmPassword)) {
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(getApplicationContext(), "El email no es válido", Toast.LENGTH_SHORT).show();
+            } else if (password.length() < 6) {
+                Toast.makeText(getApplicationContext(), "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+            } else if (!password.equals(confirmPassword)) {
                     Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
-                } else {
+            } else {
+                // Registro en Firebase
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                String userId = firebaseAuth.getCurrentUser().getUid();
 
-                    // Insertar el nuevo usuario en la base de dato
-                    long userId = dbHelper.addUser(username, rut, password);
-                    if (userId != -1) { // Si la inserción fue exitosa
-                        user = new User(userId, username, rut);
-                        Toast.makeText(getApplicationContext(), "Usuario registrado exitosamente", Toast.LENGTH_SHORT).show();
-                    }
+                                // Crear instancia de FirebaseDataHelper y llamar a createUser
+                                FirebaseDataHelper firebaseDataHelper = new FirebaseDataHelper();
+                                firebaseDataHelper.createUser(userId, email, rut, new FirebaseDataHelper.UserCreationListener() {
+                                    @Override
+                                    public void onUserCreated() {
+                                        Toast.makeText(getApplicationContext(), "Usuario registrado exitosamente", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                    }
 
-                    // Pasar el usuario a la actividad de inicio de sesión
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    intent.putExtra("USER", user);
-                    startActivity(intent);
-                }
+                                    @Override
+                                    public void onError(String error) {
+                                        Toast.makeText(getApplicationContext(), "Error al crear el usuario: " + error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                String errorMessage = task.getException().getMessage();
+                                System.out.println("Error en el registro: " + errorMessage);
+                                Toast.makeText(getApplicationContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
+
+
 
         // Configuración del enlace de login
         TextView registerPrompt = findViewById(R.id.loginPrompt);
@@ -95,3 +110,5 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
+
+

@@ -5,23 +5,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activities.CarteleraActivity"
     android:background="@color/backgroundColor">
 
-    <!--ScrollView para hacer el contenido desplazable -->
+    <!-- ScrollView para hacer el contenido desplazable -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="15dp"
-        android:paddingVertical="20dp"
+        android:paddingVertical="40dp"
         android:layout_above="@+id/bottom_navigation">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-        >
+            android:orientation="vertical">
 
             <!-- Header -->
             <TextView
@@ -29,9 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/header"
                 style="@style/header_style"
-                android:layout_marginHorizontal="8dp">
-            </TextView>
-
+                android:layout_marginHorizontal="8dp" />
 
             <!-- Películas destacadas -->
             <androidx.cardview.widget.CardView
@@ -45,25 +41,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/featured_movie"/>
+                    android:src="@drawable/featured_movie" />
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Lista de películas -->
+            <!-- Spinner para seleccionar el cine -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selecciona un cine"
+                style="@style/h2_style"
+                android:paddingHorizontal="10dp" />
+
+            <include layout="@layout/spinner_cine" />
+
+            <!-- Lista de películas (contenedor dinámico) -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Disponibles ahora"
                 style="@style/h2_style"
-                android:paddingHorizontal="10dp">
-            </TextView>
-            <include layout="@layout/grid_movies"/>
+                android:paddingHorizontal="10dp" />
+
+            <!-- Contenedor para las tarjetas de películas con ProgressBar centrado -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <!-- Contenedor para las tarjetas de películas -->
+                <GridLayout
+                    android:id="@+id/movie_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="5dp"/>
+
+                <!-- ProgressBar centrado en el contenedor de películas -->
+                <ProgressBar
+                    android:id="@+id/loading_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+
+            </FrameLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation -->
-    <include layout ="@layout/bottom_navigation"/>
 
+    <!-- Bottom Navigation -->
+    <include layout="@layout/bottom_navigation" />
 
 </RelativeLayout>

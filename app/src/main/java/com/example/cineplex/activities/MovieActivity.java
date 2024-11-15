@@ -2,86 +2,59 @@ package com.example.cineplex.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cineplex.R;
+import com.example.cineplex.helpers.MovieDisplayHelper;
+import com.example.cineplex.helpers.NavigationHelper;
 import com.example.cineplex.models.Movie;
-import com.example.cineplex.models.Ticket;
-import com.example.cineplex.models.User;
+import com.example.cineplex.models.Schedule;
+
+import java.util.Map;
 
 public class MovieActivity extends AppCompatActivity {
 
-    Spinner spinner;
     RadioGroup radioGroupDate;
     RadioGroup radioGroupTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // Llamada a la superclase onCreate
         super.onCreate(savedInstanceState);
-        // Forzar el uso del modo nocturno
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        // Establecer el layout de la actividad
         setContentView(R.layout.activity_movie);
-        // Configuración de padding para las ventanas
-        EdgeToEdge.enable(this);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        NavigationHelper.setupBottomNavigation(this);
 
-        //Obtener el objeto Movie desde el Intent
+        //Obtener el Intent y extraer el cine y la película
         Intent intent = getIntent();
+        String theaterKey = intent.getStringExtra("theaterKey");
         Movie movie = intent.getParcelableExtra("movie");
 
-        // Obtener referencia a imagen, título y descripción
+        // Configuración de la interfaz con los datos de la película
         ImageView movieImage = findViewById(R.id.movie_image);
         TextView movieTitle = findViewById(R.id.movie_title);
         TextView movieDescription = findViewById(R.id.movie_description);
 
-        // Establecer los valores de imagen, título y descripción
-        if(movie != null) {
-            movieImage.setImageResource(movie.getImageResId());
-            movieTitle.setText(movie.getTitle());
-            movieDescription.setText(movie.getDescription());
+        // Usar MovieDisplayHelper para configurar la imagen, título y descripción
+        MovieDisplayHelper.setupMovieDisplay(this, movie, movieImage, movieTitle, movieDescription);
+
+        if (movie != null) {
+            showDatesAndTimes(movie.getDates());
         }
 
-        // Almacena en las variables su referencia por ID
+        // Obtener referencias a los RadioGroups y el Spinner
         radioGroupDate = findViewById(R.id.radioGroupDate);
         radioGroupTime = findViewById(R.id.radioGroupTime);
-        spinner = findViewById(R.id.header_spinner);
-
-        // Configuración del spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.cinema_spinner_data, R.layout.spinner_item);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        // imprimir en consola la id del currentUser
-        System.out.println("User id desde movie: " + User.getCurrentUser().getUserId());
 
         // Configuración del botón Continuar
-        Button continueButton;
-        continueButton = findViewById(R.id.button_continuar);
+        Button continueButton = findViewById(R.id.button_continuar);
         continueButton.setOnClickListener(view -> {
-            // Obtener el valor seleccionado en el Spinner
-            String selectedCine = spinner.getSelectedItem().toString();
 
             // Obtener el ID del RadioButton seleccionado en RadioGroupDate
             int selectedDateId = radioGroupDate.getCheckedRadioButtonId();
@@ -99,36 +72,74 @@ public class MovieActivity extends AppCompatActivity {
             } else if (selectedSchedule.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Debes seleccionar una hora", Toast.LENGTH_SHORT).show();
             } else {
-                // obtener la id de currentUser
-                long userId = User.getCurrentUser().getUserId();
+                goToSeatSelection(theaterKey, movie, selectedDate, selectedSchedule);
 
-                // Crear el objeto Ticket
-                Ticket ticket = new Ticket(movie, selectedCine, "10", selectedDate, selectedSchedule, "", 0, userId);
-
-                // Pasar el objeto Ticket a la nueva Activity de asientos
-                Intent intent1 = new Intent(MovieActivity.this, SeatActivity.class);
-                intent1.putExtra("TICKET", ticket);
-
-                // Iniciar la nueva Activity
-                startActivity(intent1);
             }
         });
+    }
 
-        // Configuración del botón Cartelera
-        Button carteleraButton = findViewById(R.id.button_cartelera);
-        carteleraButton.setOnClickListener(view -> {
-            Intent i = new Intent(MovieActivity.this, CarteleraActivity.class);
-            startActivity(i);
-        });
+    // Método para mostrar fechas y horarios en RadioGroups
+    private void showDatesAndTimes(Map<String, Schedule> dates) {
+        // Obtener referencias a los RadioButton de las fechas
+        RadioButton[] dateButtons = {
+                findViewById(R.id.radioButtonDate1),
+                findViewById(R.id.radioButtonDate2),
+                findViewById(R.id.radioButtonDate3),
+                findViewById(R.id.radioButtonDate4)
+        };
 
-        // Configuración del botón Profile
-        Button profileButton = findViewById(R.id.button_profile);
-        profileButton.setOnClickListener(view -> {
-            Intent i = new Intent(MovieActivity.this, ProfileActivity.class);
-            startActivity(i);
-        });
+        // Configurar los RadioButton para las fechas
+        int index = 0;
+        String firstDate = null;
+        for (String date : dates.keySet()) {
+            if (index < dateButtons.length) {
+                dateButtons[index].setText(date);
+                dateButtons[index].setVisibility(View.VISIBLE);
+                dateButtons[index].setOnClickListener(v -> showTimes(dates.get(date)));
+                if (firstDate == null) {
+                    firstDate = date;
+                }
+                index++;
+            }
+        }
 
-
+        // Mostrar los horarios para la primera fecha
+        if (firstDate != null) {
+            showTimes(dates.get(firstDate));
+        }
 
     }
+
+    private void showTimes(Schedule schedule) {
+        // Obtener referencias a los RadioButton de los horarios
+        RadioButton[] timeButtons = {
+                findViewById(R.id.radioButtonTime1),
+                findViewById(R.id.radioButtonTime2),
+                findViewById(R.id.radioButtonTime3),
+        };
+
+        // Configurar los RadioButton para los horarios
+        int index = 0;
+        if (schedule != null && schedule.getTimes() != null) {
+            for (String time : schedule.getTimes().keySet()) {
+                if (index < timeButtons.length) {
+                    timeButtons[index].setText(time);
+                    timeButtons[index].setVisibility(View.VISIBLE);
+                    index++;
+                }
+            }
+        }
+    }
+
+    private void goToSeatSelection(String theaterKey, Movie movie, String selectedDate, String selectedSchedule) {
+        Intent intent = new Intent(this, SeatActivity.class);
+        intent.putExtra("theaterKey", theaterKey);
+        intent.putExtra("movie", movie);
+        intent.putExtra("selectedDate", selectedDate);
+        intent.putExtra("selectedSchedule", selectedSchedule);
+        startActivity(intent);
+    }
+
+
+
 }

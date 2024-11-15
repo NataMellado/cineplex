@@ -67,13 +67,19 @@
 />
 
                 <!-- Grid de asientos -->
-                <include layout="@layout/grid_seat_selection"/>
+                <GridLayout
+                    android:id="@+id/seat_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="5"
+                    android:padding="16dp"
+                    android:layout_margin="16dp"/>
+
 
                 <!-- Continue Button -->
                 <include layout="@layout/button_continue"/>
 
             </LinearLayout>
-
 
 
         </LinearLayout>

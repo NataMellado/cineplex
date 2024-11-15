@@ -8,41 +8,41 @@
         android:gravity="center_horizontal">
 
         <!-- RadioButtons para las fechas -->
-        <RadioButton
-            android:background="@drawable/custom_radio_selector"
-            android:button="@color/transparent"
-            android:textAlignment="center"
-            android:text="Mié 11"
-            android:layout_marginEnd="8dp"
-            android:layout_width="88dp"
-            android:layout_height="50dp"/>
+    <RadioButton
+        android:id="@+id/radioButtonDate1"
+        android:background="@drawable/custom_radio_selector"
+        android:button="@color/transparent"
+        android:textAlignment="center"
+        android:layout_width="88dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"/>
 
-        <RadioButton
-            android:background="@drawable/custom_radio_selector"
-            android:button="@color/transparent"
-            android:textAlignment="center"
-            android:text="Jue 12"
-            android:layout_marginEnd="8dp"
-            android:layout_width="88dp"
-            android:layout_height="50dp"/>
+    <RadioButton
+        android:id="@+id/radioButtonDate2"
+        android:background="@drawable/custom_radio_selector"
+        android:button="@color/transparent"
+        android:textAlignment="center"
+        android:layout_width="88dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"/>
 
-        <RadioButton
-            android:background="@drawable/custom_radio_selector"
-            android:button="@color/transparent"
-            android:textAlignment="center"
-            android:text="Vie 13"
-            android:layout_marginEnd="8dp"
-            android:layout_width="88dp"
-            android:layout_height="50dp"/>
+    <RadioButton
+        android:id="@+id/radioButtonDate3"
+        android:background="@drawable/custom_radio_selector"
+        android:button="@color/transparent"
+        android:textAlignment="center"
+        android:layout_width="88dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"/>
 
+    <RadioButton
+        android:id="@+id/radioButtonDate4"
+        android:background="@drawable/custom_radio_selector"
+        android:button="@color/transparent"
+        android:textAlignment="center"
+        android:layout_width="88dp"
+        android:layout_height="50dp"/>
 
-        <RadioButton
-            android:background="@drawable/custom_radio_selector"
-            android:button="@color/transparent"
-            android:textAlignment="center"
-            android:text="Sáb 14"
-            android:layout_width="88dp"
-            android:layout_height="50dp"/>
 
 </RadioGroup>
 

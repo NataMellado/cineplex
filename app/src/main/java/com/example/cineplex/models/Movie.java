@@ -2,70 +2,63 @@ package com.example.cineplex.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import java.util.Map;
 
 public class Movie implements Parcelable {
-    private int image;
+    // Propiedades
+    private String id;
+    private String image_path;
     private String title;
     private String description;
+    private Map<String, Schedule> dates;
 
-    // Constructor
-    public Movie(int image, String title, String description) {
-        this.image = image;
+    // Constructor vacío requerido por Firebase
+    public Movie() {}
+
+    // Constructor principal
+    public Movie(String id, String image_path, String title, String description, Map<String, Schedule> dates) {
+        this.id = id;
+        this.image_path = image_path;
         this.title = title;
         this.description = description;
+        this.dates = dates;
     }
 
-    public int getImageResId() {
-        return image;
-    }
+    // Métodos getter y setter
+    public String getId() { return id; }  // Nuevo getter para id
+    public void setId(String id) { this.id = id; }  // Setter para id
+    public String getImage_path() { return image_path; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public Map<String, Schedule> getDates() { return dates; }
+    public void setDates(Map<String, Schedule> dates) { this.dates = dates; }
 
-    public String getTitle() {
-        return title;
-    }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setImageResId(int imageResId) {
-        this.image = imageResId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+    // Métodos Parcelable
+    protected Movie(Parcel in) {
+        id = in.readString();
+        image_path = in.readString();
+        title = in.readString();
+        description = in.readString();
+        dates = in.readHashMap(Schedule.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(image);
+        dest.writeString(id);
+        dest.writeString(image_path);
         dest.writeString(title);
         dest.writeString(description);
+        dest.writeMap(dates);
     }
 
-    protected Movie(Parcel in) {
-        image = in.readInt();
-        title = in.readString();
-        description = in.readString();
-    }
+    @Override
+    public int describeContents() { return 0; }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
-
+        public Movie createFromParcel(Parcel in) { return new Movie(in); }
         @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
+        public Movie[] newArray(int size) { return new Movie[size]; }
     };
 }

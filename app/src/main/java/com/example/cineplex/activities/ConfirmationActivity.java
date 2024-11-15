@@ -1,53 +1,34 @@
 package com.example.cineplex.activities;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cineplex.R;
+import com.example.cineplex.helpers.MovieDisplayHelper;
+import com.example.cineplex.helpers.NavigationHelper;
+import com.example.cineplex.models.Movie;
 import com.example.cineplex.models.Ticket;
-import com.example.cineplex.models.User;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class ConfirmationActivity extends AppCompatActivity {
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // Llamada a la superclase onCreate
         super.onCreate(savedInstanceState);
-        // Forzar el uso del modo nocturno
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        // Establecer el layout de la actividad
         setContentView(R.layout.activity_confirmation);
-        // Configuración de padding para las ventanas
-        EdgeToEdge.enable(this);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        NavigationHelper.setupBottomNavigation(this);
 
-        // imprimir en consola la id del currentUser
-        System.out.println("User id desde confirmation: " + User.getCurrentUser().getUserId());
+        // Obtener Ticket de Intent
+        Ticket ticket = getIntent().getParcelableExtra("ticket");
+        Movie movie = getIntent().getParcelableExtra("movie");
 
-        // Obtener datos del intent
-        Intent intent = getIntent();
-        Ticket ticket = intent.getParcelableExtra("TICKET");
-        User user = intent.getParcelableExtra("USER");
 
         // Obtener referencias de las vistas
         TextView textViewCinema = findViewById(R.id.cinema);
@@ -58,34 +39,22 @@ public class ConfirmationActivity extends AppCompatActivity {
         TextView movieTitleView = findViewById(R.id.movie_title);
         TextView textViewPrice = findViewById(R.id.price);
 
-        // Configurar la imagen y el título
+        // Verificar que el ticket no sea nulo antes de acceder a sus datos
         if (ticket != null) {
-            movieImage.setImageResource(ticket.getPelicula().getImageResId());
-            movieTitleView.setText(ticket.getPelicula().getTitle());
+            // Usar MovieDisplayHelper para configurar la imagen y título de la película
+            MovieDisplayHelper.setupMovieDisplay(this, movie, movieImage, movieTitleView, null);
+
+            // Mostrar los datos del ticket en los TextViews
+            textViewCinema.setText("Cine: " + ticket.getCine());
+            textViewDate.setText("Fecha: " + ticket.getFecha());
+            textViewTime.setText("Hora: " + ticket.getHora());
+            textViewSeats.setText("Asientos: " + ticket.getAsientos());
+            textViewPrice.setText("Precio: " + NumberFormat.getCurrencyInstance(new Locale("es", "CL")).format(ticket.getValor()));
+
         }
 
 
-        // Mostrar los datos de la película seleccionada en TextView
-        textViewCinema.setText("Cine: " + ticket.getCine());
-        textViewDate.setText("Fecha: " + ticket.getFecha());
-        textViewTime.setText("Hora: " + ticket.getHora());
-        textViewSeats.setText("Asientos: " + ticket.getAsientos());
-        textViewPrice.setText("Valor: " + NumberFormat.getCurrencyInstance(new Locale("es", "CL")).format(ticket.getValor()));
 
-
-        // Configuración del botón Cartelera
-        Button carteleraButton = findViewById(R.id.button_cartelera);
-        carteleraButton.setOnClickListener(view -> {
-            Intent i = new Intent(ConfirmationActivity.this, CarteleraActivity.class);
-            startActivity(i);
-        });
-
-        // Configuración del botón Profile
-        Button profileButton = findViewById(R.id.button_profile);
-        profileButton.setOnClickListener(view -> {
-            Intent i = new Intent(ConfirmationActivity.this, ProfileActivity.class);
-            startActivity(i);
-        });
 
     }
 }

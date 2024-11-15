@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
@@ -15,13 +16,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cineplex.R;
-import com.example.cineplex.database.DatabaseHelper;
-import com.example.cineplex.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText txtUser, txtPassword;
     Button btnLogin;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,41 +44,36 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Inicializar Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
+
         // Referencias a los elementos
         txtUser = findViewById(R.id.user);
         txtPassword =  findViewById(R.id.password);
         btnLogin = findViewById(R.id.login);
 
-        // Obtener el usuario de la actividad anterior
-        Intent intent = getIntent();
-        User user = intent.getParcelableExtra("USER");
-
-        if (user != null) {
-            txtUser.setText(user.getUsername());
-        }
-
         // Configuración del botón de inicio de sesión
         btnLogin.setOnClickListener(view -> {
-            String username = txtUser.getText().toString();
+            String email = txtUser.getText().toString();
             String password = txtPassword.getText().toString();
 
-            if (username.isEmpty() || password.isEmpty()) {
+            // Validaciones
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Debes ingresar todos los datos", Toast.LENGTH_SHORT).show();
             } else {
-                // Obtener la instancia de DatabaseHelper
-                DatabaseHelper dbHelper = DatabaseHelper.getInstance(getApplicationContext());
-
-                // Verificar las credenciales del usuario
-                if (dbHelper.verifyCredentials(username, password)) {
-
-                    Intent I = new Intent(LoginActivity.this, CarteleraActivity.class);
-                    // imprimir en consola la id del currentUser
-                    System.out.println("User id desde login: " + User.getCurrentUser().getUserId());
-                    startActivity(I);
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                }
+                // Autenticar al usuario con Firebase
+                firebaseAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Intent i = new Intent(LoginActivity.this, CarteleraActivity.class);
+                                    startActivity(i);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Las credenciales son incorrectas", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
         });
 

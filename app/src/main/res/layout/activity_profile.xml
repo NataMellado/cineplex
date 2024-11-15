@@ -43,16 +43,6 @@
                 android:gravity="center"
                 style="@style/h2_style"/>
 
-            <!-- RUT del usuario -->
-            <TextView
-                android:id="@+id/rut"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RUT del Usuario"
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                style="@style/h2_style"/>
 
             <!-- Botón para cerrar sesión -->
             <Button

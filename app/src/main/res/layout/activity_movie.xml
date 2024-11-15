@@ -63,16 +63,6 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="10dp">
 
-                <!-- Spinner para el cine  -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Selecciona un cine"
-                    style="@style/h2_style"
-                    android:paddingHorizontal="10dp">
-                </TextView>
-                <include layout="@layout/spinner_cine"/>
-
                 <!-- Grid de fechas -->
                 <TextView
                     android:layout_width="match_parent"

@@ -24,7 +24,7 @@
         android:inputType="textPersonName"
         style="@style/description2_style"
         android:textColorHint="@color/white"
-        android:hint="Nombre de usuario"
+        android:hint="Email"
         />
 
     <EditText

@@ -2,126 +2,143 @@ package com.example.cineplex.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cineplex.R;
-import com.example.cineplex.database.DatabaseHelper;
+import com.example.cineplex.helpers.FirebaseDataHelper;
+import com.example.cineplex.helpers.MovieDisplayHelper;
+import com.example.cineplex.helpers.NavigationHelper;
+import com.example.cineplex.models.Movie;
+import com.example.cineplex.models.Seat;
 import com.example.cineplex.models.Ticket;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SeatActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper;
+    private GridLayout seatContainer;
+    private FirebaseDataHelper firebaseDataHelper;
+    private List<CheckBox> seatCheckBoxes = new ArrayList<>(); // Lista para almacenar los CheckBoxes dinámicos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // Llamada a la superclase onCreate
         super.onCreate(savedInstanceState);
-        // Forzar el uso del modo nocturno
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        // Establecer el layout de la actividad
         setContentView(R.layout.activity_seat);
-        // Configuración de padding para las ventanas
-        EdgeToEdge.enable(this);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        NavigationHelper.setupBottomNavigation(this);
 
-        // Obtener instancia de DatabaseHelper
-        databaseHelper = DatabaseHelper.getInstance(this);
-
-        // Recibir el objeto ticket desde la actividad anterior
+        // Obtener el Intent y extraer los datos de la película
         Intent intent = getIntent();
-        Ticket ticket = intent.getParcelableExtra("TICKET");
+        String theaterKey = intent.getStringExtra("theaterKey");
+        Movie movie = intent.getParcelableExtra("movie");
+        String selectedDate = intent.getStringExtra("selectedDate");
+        String selectedSchedule = intent.getStringExtra("selectedSchedule");
 
+        // Obtener userI del usuario logueado
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //imprimir con log el userId
+        Log.d("SeatActivity", "User ID: " + userId);
 
-        // Renderizar imagen y título
+        // Renderizar datos de la película en la vista
         ImageView movieImage = findViewById(R.id.movie_image);
-        TextView movieTitleView = findViewById(R.id.movie_title);
+        TextView movieTitle = findViewById(R.id.movie_title);
+        MovieDisplayHelper.setupMovieDisplay(this, movie, movieImage, movieTitle, null);
 
-        // Establecer los valores de imagen y título
-        if (ticket != null) {
-            movieImage.setImageResource(ticket.getPelicula().getImageResId());
-            movieTitleView.setText(ticket.getPelicula().getTitle());
+        seatContainer = findViewById(R.id.seat_container);
+        firebaseDataHelper = new FirebaseDataHelper();
+
+        // **Verificación de valores nulos antes de llamar a Firebase**
+        if (theaterKey == null || movie == null || movie.getId() == null || selectedDate == null || selectedSchedule == null) {
+            Toast.makeText(this, "Error al cargar la información de los asientos", Toast.LENGTH_SHORT).show();
+            finish(); // Cierra la actividad si falta algún valor importante
+            return;
         }
 
-        // Obtener referencia a los CheckBox
-        int[] checkBoxIds = {
-                R.id.checkbox1, R.id.checkbox2, R.id.checkbox3, R.id.checkbox4, R.id.checkbox5,
-                R.id.checkbox6, R.id.checkbox7, R.id.checkbox8, R.id.checkbox9, R.id.checkbox10,
-                R.id.checkbox11, R.id.checkbox12, R.id.checkbox13, R.id.checkbox14, R.id.checkbox15,
-                R.id.checkbox16, R.id.checkbox17, R.id.checkbox18, R.id.checkbox19, R.id.checkbox20,
-                R.id.checkbox21, R.id.checkbox22, R.id.checkbox23, R.id.checkbox24, R.id.checkbox25
-        };
 
-        //Inicializar el botón continuar
-        Button continueButton;
-        continueButton = findViewById(R.id.button_continuar);
+        // Cargar los asientos dinámicamente desde Firebase
+        firebaseDataHelper.loadSeatsForSchedule(theaterKey, movie.getId(), selectedDate, selectedSchedule, new FirebaseDataHelper.SeatLoadListener() {
+            @Override
+            public void onSeatsLoaded(Map<String, Seat> seats) {
+                renderSeats(seats);
+            }
+        });
+
+        // Configuración del botón continuar
+        Button continueButton = findViewById(R.id.button_continuar);
         continueButton.setOnClickListener(view -> {
-
-            StringBuilder selectedSeats = new StringBuilder();
+            List<String> selectedSeatsList = new ArrayList<>();
             int selectedSeatsCount = 0;
 
-            for(int id: checkBoxIds) {
-                CheckBox checkBox = findViewById(id);
-                if (checkBox.isChecked()){
-                    CharSequence contentDescription = checkBox.getContentDescription();
-                    selectedSeats.append(contentDescription).append("  ");
+            // Iterar sobre la lista de CheckBoxes dinámicos
+            for (CheckBox checkBox : seatCheckBoxes) {
+                if (checkBox.isChecked()) {
+                    selectedSeatsList.add(checkBox.getText().toString());
                     selectedSeatsCount++;
                 }
             }
 
-            if (selectedSeats.toString().isEmpty()) {
+            if (selectedSeatsList.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Debes seleccionar al menos un asiento.", Toast.LENGTH_SHORT).show();
             } else {
+                // Crear un objeto Ticket con los datos seleccionados
+                Ticket ticket = new Ticket(
+                        null,
+                        movie.getId(),
+                        movie.getTitle(),
+                        movie.getImage_path(),
+                        theaterKey,
+                        "Sala 10",  // Aquí puedes ajustar el número de sala
+                        selectedDate,
+                        selectedSchedule,
+                        selectedSeatsList,
+                        selectedSeatsList.size() * 5990,
+                        userId
+                );
 
-                // Establecer los asientos seleccionados en el objeto Ticket y calcular el valor
-                ticket.setAsientos(selectedSeats.toString());
-                ticket.calcularValor(selectedSeatsCount);
+                // Guardar el ticket en Firebase
+                firebaseDataHelper.createTicket(ticket);
 
-                // Añadir el ticket a la base de datos
-                boolean isAdded= databaseHelper.addTicket(ticket);
+                // Actualizar el estado de los asientos en Firebase
+                firebaseDataHelper.updateSeatStatus(theaterKey, movie.getId(), selectedDate, selectedSchedule, selectedSeatsList);
 
-                if (isAdded) {
-                    Toast.makeText(getApplicationContext(),  "Ticket comprado con éxito", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Error al comprar el ticket", Toast.LENGTH_SHORT).show();
-                }
-
-                // Pasar el objeto Ticket a la nueva Activity de confirmación
-                Intent i = new Intent(SeatActivity.this, ConfirmationActivity.class);
-                i.putExtra("TICKET", ticket);
-                startActivity(i);
+                goToConfirmation(ticket, movie);
             }
         });
 
-
-        // Configuración del botón Cartelera
-        Button carteleraButton = findViewById(R.id.button_cartelera);
-        carteleraButton.setOnClickListener(view -> {
-            Intent i = new Intent(SeatActivity.this, CarteleraActivity.class);
-            startActivity(i);
-        });
-
-        // Configuración del botón Profile
-        Button profileButton = findViewById(R.id.button_profile);
-        profileButton.setOnClickListener(view -> {
-            Intent i = new Intent(SeatActivity.this, ProfileActivity.class);
-            startActivity(i);
-        });
-
     }
+
+    private void renderSeats(Map<String, Seat> seats) {
+        seatContainer.removeAllViews();
+        seatCheckBoxes.clear();
+
+        for (Map.Entry<String, Seat> entry : seats.entrySet()) {
+            String seatNumber = entry.getKey();
+            Seat seat = entry.getValue();
+
+            CheckBox seatCheckBox = new CheckBox(this);
+            seatCheckBox.setText(seatNumber);
+            seatCheckBox.setEnabled(seat.isAvailable()); // Verifica la disponibilidad con isAvailable()
+            seatContainer.addView(seatCheckBox);
+            seatCheckBoxes.add(seatCheckBox);
+        }
+    }
+
+    private void goToConfirmation(Ticket ticket, Movie movie) {
+        Intent intent = new Intent(this, ConfirmationActivity.class);
+        intent.putExtra("ticket", ticket);
+        intent.putExtra("movie", movie);
+        Toast.makeText(getApplicationContext(), "Ticket comprado con éxito", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+    }
+
 }
